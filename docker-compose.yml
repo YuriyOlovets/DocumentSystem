@@ -1,0 +1,29 @@
+version: '3'
+services:
+  documents_web:
+    build: ./
+    command: bash ./run.sh
+    environment:
+      - ENVIRONMENT=stage
+    expose:
+      - "5005"
+    ports:
+      - "5005:5005"
+    restart: always
+
+
+
+  crm_documents_cache:
+    build: ./docker/redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+      interval: 10s
+      timeout: 30s
+      retries: 3
+    expose:
+      - "6300"
+    ports:
+      - "6300:6300"
+    restart: always
